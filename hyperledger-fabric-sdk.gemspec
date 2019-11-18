@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name          = 'hyperledger-fabric-sdk'
-  s.version       = '0.0.0'
+  s.version       = '0.1.0'
   s.date          = '2019-11-12'
   s.summary       = "This SDK enables Ruby developers to interact with hyperledger-fabric"
   s.description   = ""
