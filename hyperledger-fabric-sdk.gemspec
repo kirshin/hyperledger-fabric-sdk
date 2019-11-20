@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name          = 'hyperledger-fabric-sdk'
-  s.version       = '0.1.1'
+  s.version       = '0.1.2'
   s.date          = '2019-11-12'
   s.summary       = "This SDK enables Ruby developers to interact with hyperledger-fabric"
   s.description   = ""
@@ -43,10 +43,10 @@ Gem::Specification.new do |s|
     "lib/fabric_ca",
     "lib/fabric_ca/faraday_middleware",
   ]
-  s.add_runtime_dependency 'colorize', '~>0.8'
-  s.add_runtime_dependency 'faraday_middleware', '~>0.13'
-  s.add_runtime_dependency 'faraday', '~>0.17'
-  s.add_runtime_dependency 'grpc', '~>1.25'
-  s.add_runtime_dependency 'digest-sha3', '~>1.1'
+  s.add_dependency 'colorize', '~>0.8'
+  s.add_dependency 'faraday_middleware', '~>0.13'
+  s.add_dependency 'faraday', '~>0.17'
+  s.add_dependency 'grpc', '~>1.25'
+  s.add_dependency 'digest-sha3', '~>1.1'
   s.homepage      = 'https://github.com/kirshin/hyperledger-fabric-sdk'
 end
