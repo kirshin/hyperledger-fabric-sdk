@@ -4,10 +4,10 @@ require 'base64'
 module FabricCA
   module FaradayMiddleware
     class TokenAuth < Faraday::Middleware
-      attr_reader :app, :identity_context
+      attr_reader :app, :identity
 
       def call(env)
-        if identity_context&.enrolled?
+        if identity
           env[:request_headers] =
             env[:request_headers].merge(
               'Authorization' => generate_auth_header(env)
@@ -17,22 +17,20 @@ module FabricCA
         app.call env
       end
 
-      def initialize(app, identity_context)
+      def initialize(app, identity)
         @app = app
-        @identity_context = identity_context
+        @identity = identity
       end
 
       private
 
-        def generate_auth_header(env)
-          body = Base64.strict_encode64(env.body.to_s)
-          identity = identity_context.identity
-          cert = Base64.strict_encode64 identity.certificate
-          body_and_cert = body + '.' + cert
-          sign = Base64.strict_encode64 identity.sign(body_and_cert)
+      def generate_auth_header(env)
+        body = Base64.strict_encode64(env.body.to_s)
+        body_and_cert = body + '.' + identity.certificate
 
-          cert + '.' + sign
-        end
+        identity.certificate + '.' +
+          Base64.strict_encode64(identity.sign(body_and_cert))
+      end
     end
   end
 end

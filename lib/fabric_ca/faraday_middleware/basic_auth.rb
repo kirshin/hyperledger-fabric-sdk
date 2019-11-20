@@ -25,9 +25,9 @@ module FabricCA
 
       private
 
-        def generate_auth_header
-          Base64.encode64 "#{username}:#{password}"
-        end
+      def generate_auth_header
+        Base64.strict_encode64 "#{username}:#{password}"
+      end
     end
   end
 end

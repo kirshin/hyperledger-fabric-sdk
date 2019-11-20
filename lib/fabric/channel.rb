@@ -1,54 +1,75 @@
-require 'peer/transaction_pb'
-
 module Fabric
   class Channel
-    attr_reader :identity_context, :name, :peers, :orderers
+    attr_reader :identity, :crypto_suite, :channel_id,
+                :orderers, :peers, :logger
 
-    def initialize(args)
-      @identity_context = args[:identity_context]
-      @name = args[:name]
-      @peers = args[:peers] || []
-      @orderers = args[:orderers] || []
+    def initialize(opts = {})
+      options = Fabric.options.merge opts
+
+      @channel_id = options[:channel_id]
+      @logger = Logger.new options[:logger], options[:logger_filters]
+      @identity = options[:identity]
+      @crypto_suite = options[:crypto_suite]
     end
 
-    def query_by_chaincode(request)
-      request[:targets] ||= peers
-      request[:transaction] = TransactionID.new identity_context
+    def register_peer(url, opts = {})
+      @peers ||= []
 
-      PeerEndorser.send_transaction_proposal request, name, identity_context
+      @peers << Peer.new(url: url, opts: opts, logger: logger)
     end
 
-    def send_transaction(request, &block)
-      header = Common::Header.decode request[:proposal].header
-      chaincode_action_payload = build_chaincode_action request
+    def register_orderer(url, opts = {})
+      @orderers ||= []
 
-      transaction_action = Protos::TransactionAction.new header: header.signature_header,
-                                                         payload: chaincode_action_payload.to_proto
-      transaction = Protos::Transaction.new actions: [transaction_action]
+      @orderers << Orderer.new(url: url, opts: opts, logger: logger)
+    end
 
-      payload = Common::Payload.new header: header,
-                                    data: transaction.to_proto
+    def query(request = {})
+      request[:channel_id] = channel_id
 
-      envelope = Common::Envelope.new signature: identity_context.identity.sign(payload.to_proto),
-                                      payload: payload.to_proto
+      logging __method__, request
 
-      orderers.first.send_broadcast envelope, &block
+      proposal = Proposal.new crypto_suite, identity, request
+      proposal_responses = peers.map { |peer| peer.send_process_proposal(proposal.signed_proposal) }
+
+      chaincode_response = ChaincodeResponse.new proposal: proposal,
+                                                 proposal_responses: proposal_responses
+
+      chaincode_response.validate!
+
+      chaincode_response
+    end
+
+    def invoke(chaincode_response)
+      transaction = Transaction.new crypto_suite,
+                                    identity,
+                                    proposal: chaincode_response.proposal,
+                                    responses: chaincode_response.proposal_responses
+
+      send_transaction transaction
+
+      chaincode_response
+    end
+
+    def create_transaction_info
+      TransactionInfo.new crypto_suite, identity
     end
 
     private
 
-      def build_chaincode_action(request)
-        responses = request[:responses].select { |response| response.response.status == 200 }
-        endorsements = responses.map { |response| response.endorsement }
-        chaincode_endorser_action =
-          Protos::ChaincodeEndorsedAction.new proposal_response_payload: responses.first.payload,
-                                              endorsements: endorsements
+    def send_transaction(transaction)
+      payload = Common::Payload.new header: transaction.header,
+                                    data: transaction.transaction.to_proto
 
-        payload = Protos::ChaincodeProposalPayload.decode request[:proposal].payload
-        payload_no_trans = Protos::ChaincodeProposalPayload.new input: payload.input
+      envelope = Common::Envelope.new signature: identity.sign(payload.to_proto),
+                                      payload: payload.to_proto
 
-        Protos::ChaincodeActionPayload.new action: chaincode_endorser_action,
-                                           chaincode_proposal_payload: payload_no_trans.to_proto
-      end
+      orderers.each { |orderer| orderer.send_broadcast envelope }
+    end
+
+    def logging(section, message = {})
+      logger.info section.to_s.upcase.colorize(:yellow),
+                  message.to_s.colorize(:blue)
+    end
   end
 end
