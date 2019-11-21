@@ -2,35 +2,41 @@ require 'msp/identities_pb'
 
 module Fabric
   class Identity
-    attr_reader :certificate, :public_key, :private_key, :msp_id, :crypto_suite,
-                :key, :iv
+    attr_reader :private_key,
+                :public_key,
+                :address
 
-    def initialize(args)
-      @certificate = args[:certificate]
-      @public_key = args[:public_key]
-      @private_key = args[:private_key]
-      @msp_id = args[:msp_id]
-      @crypto_suite = args[:crypto_suite]
-      @key = args[:key].to_s
-      @iv = args[:iv].to_s
+    attr_accessor :certificate, :mspid
+
+    def initialize(crypto_suite, opts = {})
+      @crypto_suite = crypto_suite
+
+      @private_key = opts[:private_key] || @crypto_suite.generate_private_key
+      @public_key = opts[:public_key] || @crypto_suite.restore_public_key(private_key)
+      @certificate = opts[:certificate]
+      @mspid = opts[:mspid]
+
+      @address = @crypto_suite.address_from_public_key public_key
     end
 
-    def serialize
-      Msp::SerializedIdentity.new(mspid: msp_id, id_bytes: certificate).to_proto
+    def generate_csr(attrs = [])
+      @crypto_suite.generate_csr private_key, attrs
     end
 
     def sign(message)
-      digest = crypto_suite.digest message
-
-      crypto_suite.sign private_key, digest
+      @crypto_suite.sign(private_key, message)
     end
 
-    def encrypt(message)
-      crypto_suite.encrypt key, iv, message
+    def shared_secret_by(public_key)
+      @crypto_suite.build_shared_key private_key, public_key
     end
 
-    def decrypt(message)
-      crypto_suite.decrypt  key, iv, message
+    def decoded_certificate
+      Base64.strict_decode64 certificate
+    end
+
+    def serialize
+      Msp::SerializedIdentity.new(mspid: mspid, id_bytes: decoded_certificate).to_proto
     end
   end
 end

@@ -1,8 +1,10 @@
 module FabricCA
   module Configuration
-    VALID_OPTIONS_KEYS = [:endpoint, :identity_context, :username, :password, :logger]
+    VALID_OPTIONS_KEYS = %i[endpoint ca_name identity
+                            username password logger
+                            connection_opts].freeze
 
-    attr_accessor *VALID_OPTIONS_KEYS
+    VALID_OPTIONS_KEYS.each { |attr| attr_accessor attr }
 
     def self.extended(base)
       base.reset

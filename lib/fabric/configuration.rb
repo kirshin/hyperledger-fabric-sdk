@@ -1,14 +1,20 @@
 module Fabric
   module Configuration
-    VALID_OPTIONS_KEYS = [:identity_context, :orderers, :peers]
+    DEFAULT_TIMEOUT = 30
 
-    attr_accessor *VALID_OPTIONS_KEYS
+    VALID_OPTIONS_KEYS = %i[
+      crypto_suite identity orderers
+      channel_id peers timeout logger
+      logger_filters event_hub_url
+    ].freeze
+
+    VALID_OPTIONS_KEYS.each { |attr| attr_accessor attr }
 
     def self.extended(base)
       base.reset
     end
 
-    def configure
+    def self.configure
       yield self
     end
 
@@ -19,7 +25,9 @@ module Fabric
     end
 
     def reset
-      VALID_OPTIONS_KEYS.each {|key| send("#{key}=", nil)}
+      VALID_OPTIONS_KEYS.each { |key| send("#{key}=", nil) }
+
+      self.timeout = DEFAULT_TIMEOUT
     end
   end
 end

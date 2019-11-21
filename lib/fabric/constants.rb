@@ -13,6 +13,6 @@ module Fabric
     FUNC_GET_CONFIG_BLOCK = 'GetConfigBlock'.freeze
 
     ## Variables
-    CHANNEL_HEADER_VERSION = 1.freeze
+    CHANNEL_HEADER_VERSION = 1
   end
 end

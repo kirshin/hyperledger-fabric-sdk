@@ -4,7 +4,7 @@ module FabricCA
   module FaradayMiddleware
     class RaiseHttpException < Faraday::Middleware
       ## Variables
-      LOGGER_TAG = 'FABRIC CA'
+      LOGGER_TAG = 'FABRIC CA'.freeze
 
       ## Attributes
       attr_reader :app, :logger
@@ -28,20 +28,20 @@ module FabricCA
 
       private
 
-        def build_error_message(response)
-          [
-            response[:method].to_s.upcase,
-            response[:url],
-            response[:status],
-            response[:body]
-          ].join(', ')
-        end
+      def build_error_message(response)
+        [
+          response[:method].to_s.upcase,
+          response[:url],
+          response[:status],
+          response[:body]
+        ].join(', ')
+      end
 
-        def logging(message)
-          return unless logger
+      def logging(message)
+        return unless logger
 
-          logger.tagged(LOGGER_TAG) { |logger| logger.error message }
-        end
+        logger.tagged(LOGGER_TAG) { |logger| logger.error message }
+      end
     end
   end
 end

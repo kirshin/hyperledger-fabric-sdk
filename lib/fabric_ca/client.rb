@@ -1,12 +1,9 @@
-require File.expand_path('../connection', __FILE__)
-require File.expand_path('../request', __FILE__)
-
 module FabricCA
   class Client
     include Connection
     include Request
 
-    attr_accessor *Configuration::VALID_OPTIONS_KEYS
+    Configuration::VALID_OPTIONS_KEYS.each { |attr| attr_accessor attr }
 
     def initialize(options = {})
       options = FabricCA.options.merge(options)
@@ -25,27 +22,22 @@ module FabricCA
       conf
     end
 
-    def enroll(identity_context, msp_id)
-      crypto_suite = identity_context.crypto_suite
-      private_key = crypto_suite.generate_private_key
-      certificate_request = crypto_suite.generate_csr private_key,
-                                                      [['CN', identity_context.username]]
-
-      response = post 'enroll', certificate_request: certificate_request.to_s
-
-      identity_context.enroll private_key: private_key,
-                              certificate: Base64.decode64(response.result['Cert']),
-                              msp_id: msp_id
-
-      identity_context
+    def enroll(certificate_request, attrs = nil)
+      post 'enroll', certificate_request: certificate_request.to_s,
+                     caName: ca_name,
+                     attr_reqs: attrs
     end
 
     def register(params = {})
       post 'register', params
     end
 
-    def tcert(params = {})
-      post 'tcert', params
+    def list_identities(opts = {})
+      get 'identities', opts
+    end
+
+    def list_affiliations(opts = {})
+      get 'affiliations', opts
     end
   end
 end
