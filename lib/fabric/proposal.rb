@@ -70,7 +70,7 @@ module Fabric
     end
 
     def tx_timestamp
-      now = Time.current
+      now = Time.now
 
       @tx_timestamp ||= Google::Protobuf::Timestamp.new seconds: now.to_i, nanos: now.nsec
     end

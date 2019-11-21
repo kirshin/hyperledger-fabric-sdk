@@ -19,7 +19,7 @@ module Fabric
     end
 
     def self.build_timestamp
-      now = Time.current
+      now = Time.now
 
       Google::Protobuf::Timestamp.new seconds: now.to_i, nanos: now.nsec
     end
