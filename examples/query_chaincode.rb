@@ -23,7 +23,7 @@ user_identity = Fabric::Identity.new(
   }
 )
 
-enrollment_response = fabric_ca_client.enroll(user_identity.generate_csr([['CN', 'admin']]))
+enrollment_response = fabric_ca_client.enroll(user_identity.generate_csr([%w(CN admin)]))
 
 user_identity.certificate = enrollment_response[:result][:Cert]
 

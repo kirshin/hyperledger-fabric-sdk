@@ -23,7 +23,7 @@ user_identity = Fabric::Identity.new(
   }
 )
 
-enrollment_response = fabric_ca_client.enroll(user_identity.generate_csr([['CN', 'admin']]))
+enrollment_response = fabric_ca_client.enroll(user_identity.generate_csr([%w(CN admin)]))
 
 user_identity.certificate = enrollment_response[:result][:Cert]
 
@@ -35,5 +35,5 @@ fabric_client = fabric_sdk.client(
 fabric_client.invoke(
   chaincode_id: "fabcar",
   channel_id: 'mychannel',
-  args: ["initLedger", "arg1", "arg2"]
+  args: %w(initLedger arg1 arg2)
 )

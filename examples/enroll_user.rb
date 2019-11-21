@@ -16,6 +16,6 @@ user = Fabric::Identity.new(
     affiliation: "org1.department1",
     mspid: 'Org1MSP'
   }
-).generate_csr([['CN', 'admin']])
+).generate_csr([%w(CN admin)])
 
 fabric_ca_client.enroll(user)

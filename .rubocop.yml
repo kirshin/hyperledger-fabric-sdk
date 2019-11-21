@@ -1,0 +1,29 @@
+AllCops:
+  TargetRubyVersion: 2.3
+  Exclude:
+    - 'lib/fabric/protos/**/*'
+  DisplayCopNames: true
+  StyleGuideCopsOnly: true
+
+Metrics/LineLength:
+  Max: 100
+
+Style/Documentation:
+  Enabled: false
+
+Lint/AmbiguousOperator:
+  Enabled: false
+
+Style/SymbolArray:
+  Enabled: false
+
+PercentLiteralDelimiters:
+  PreferredDelimiters:
+    default: ()
+    '%w': '()'
+
+Layout/IndentationConsistency:
+  EnforcedStyle: normal
+
+Style/StringLiterals:
+  Enabled: false
