@@ -3,7 +3,7 @@ module Fabric
     attr_reader :url, :identity, :logger, :crypto_suite, :channel_id
     attr_reader :channel, :connection, :queue
 
-    MAX_BLOCK_NUMBER = 1_000_000_000
+    MAX_BLOCK_NUMBER = 4_611_686_018_427_387_903
 
     def initialize(opts = {})
       @url = opts[:url]
@@ -11,8 +11,9 @@ module Fabric
       @crypto_suite = opts[:crypto_suite]
       @logger = opts[:logger]
       @channel_id = opts[:channel_id]
+      channel_creds = opts[:channel_creds] || :this_channel_is_insecure
 
-      @channel = ::Protos::Deliver::Stub.new url, :this_channel_is_insecure
+      @channel = ::Protos::Deliver::Stub.new url, channel_creds
       @queue = Fabric::EnumeratorQueue.new channel
       @connection = channel.deliver(queue.each).each
     end

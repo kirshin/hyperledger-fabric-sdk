@@ -2,28 +2,24 @@ require 'peer/peer_services_pb'
 
 module Fabric
   class Peer
-    attr_reader :url, :opts, :client, :logger
+    attr_reader :url, :channel, :logger
 
-    def initialize(args)
-      @url = args[:url]
-      @opts = args[:opts]
-      @logger = args[:logger]
+    def initialize(opts)
+      @url = opts[:url]
+      @logger = opts[:logger]
+      channel_creds = opts[:channel_creds] || :this_channel_is_insecure
 
-      @client = Protos::Endorser::Stub.new url, :this_channel_is_insecure
+      @channel = Protos::Endorser::Stub.new url, channel_creds
     end
 
     def send_process_proposal(proposal)
       logging :send_process_proposal_request, proposal.to_h
 
-      response = client.process_proposal proposal
+      response = channel.process_proposal proposal
 
       logging :send_process_proposal_response, response.to_h
 
       response
-    end
-
-    def create_event_hub
-      EventHub.new url: url, opts: opts, logger: logger
     end
 
     private

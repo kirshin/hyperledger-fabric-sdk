@@ -2,20 +2,20 @@ require 'orderer/ab_services_pb.rb'
 
 module Fabric
   class Orderer
-    attr_reader :url, :opts, :client, :logger
+    attr_reader :url, :channel, :logger
 
-    def initialize(args)
-      @url = args[:url]
-      @opts = args[:opts]
-      @logger = args[:logger]
+    def initialize(opts)
+      @url = opts[:url]
+      @logger = opts[:logger]
+      channel_creds = opts[:channel_creds] || :this_channel_is_insecure
 
-      @client = ::Orderer::AtomicBroadcast::Stub.new url, :this_channel_is_insecure
+      @channel = ::Orderer::AtomicBroadcast::Stub.new url, channel_creds
     end
 
     def send_broadcast(envelope)
       logging :send_broadcast_request, envelope.to_h
 
-      client.broadcast([envelope]).each do |response|
+      channel.broadcast([envelope]).each do |response|
         logging :send_broadcast_response, response.to_h
 
         raise OrdererError response.message unless response.status == :SUCCESS
