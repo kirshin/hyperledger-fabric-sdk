@@ -1,5 +1,6 @@
 module Fabric
-  class Logger
+  class FabricLogger
+    LOGGER_TAG = 'HYPERLEDGER FABRIC'.colorize(:green).freeze
     FILTERED_MASK = '[FILTERED]'.freeze
 
     attr_reader :logger, :filters

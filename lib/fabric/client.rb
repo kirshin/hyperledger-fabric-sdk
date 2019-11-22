@@ -5,7 +5,7 @@ module Fabric
     def initialize(opts = {})
       options = Fabric.options.merge opts
 
-      @logger = Logger.new options[:logger], options[:logger_filters]
+      @logger = FabricLogger.new options[:logger], options[:logger_filters]
       @identity = options[:identity]
     end
 

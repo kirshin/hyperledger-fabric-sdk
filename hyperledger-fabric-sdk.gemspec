@@ -4,10 +4,23 @@ Gem::Specification.new do |s|
   s.date          = '2019-11-12'
   s.summary       = "This SDK enables Ruby developers to interact with hyperledger-fabric"
   s.description   = ""
-  s.authors       = ["Alexandr Kirshin(kirshin)", "(qiusugang)", 'Bryan Padron(djlazz3)']
+  s.authors       = ["Alexandr Kirshin(kirshin)", "(qiusugang)", "Bryan Padron(djlazz3)"]
+  # s.add_dependency 'rainbow', '~>3.0'
+  s.add_dependency 'colorize', '~>0.8'
+  s.add_dependency 'faraday_middleware', '~>0.13'
+  s.add_dependency 'faraday', '~>0.17'
+  s.add_dependency 'grpc', '~>1.25'
+  s.add_dependency 'google-protobuf', '~>3.10'
+  s.add_dependency 'digest-sha3', '~>1.1'
+  s.add_development_dependency "bundler", "~> 2.0"
+  s.add_development_dependency "rake", "~> 10.0"
   s.files         = ["lib/hyperledger-fabric-sdk.rb"]
   s.files         += Dir['lib/*.rb']
   s.files         += Dir['lib/**/*.rb']
+  s.files         << "Gemfile"
+  s.files         << "Gemfile.lock"
+  s.files         << "LICENSE.txt"
+  s.files         << "Rakefile"
   s.require_paths = [
     "lib",
     "lib/fabric",
@@ -43,10 +56,14 @@ Gem::Specification.new do |s|
     "lib/fabric_ca",
     "lib/fabric_ca/faraday_middleware"
   ]
+<<<<<<< HEAD
   s.add_dependency 'colorize', '~>0.8'
   s.add_dependency 'faraday_middleware', '~>0.13'
   s.add_dependency 'faraday', '~>0.17'
   s.add_dependency 'grpc', '~>1.25'
   s.add_dependency 'digest-sha3', '~>1.1'
   s.homepage = 'https://github.com/kirshin/hyperledger-fabric-sdk'
+=======
+  s.homepage      = 'https://github.com/kirshin/hyperledger-fabric-sdk'
+>>>>>>> adds MIT License, Gemfile, and Rakefile, makes changes to gem to avoid collisions with rails
 end
