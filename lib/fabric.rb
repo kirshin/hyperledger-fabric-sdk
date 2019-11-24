@@ -38,6 +38,7 @@ module Fabric
   def self.new(config)
     @orderers = config[:orderers]
     @peers = config[:peers]
+
     self
   end
 
@@ -49,15 +50,6 @@ module Fabric
     event_hubs.each { |config| client.register_event_hub config }
 
     client
-  end
-
-  def self.channel(opts = {})
-    channel = Fabric::Channel.new opts
-
-    @orderers.each { |url| channel.register_orderer url, opts }
-    @peers.each { |url| channel.register_peer url, opts }
-
-    channel
   end
 
   def self.event_hub(opts = {})
