@@ -1,16 +1,15 @@
 module Fabric
   class TransactionInfo
-    attr_reader :tx_id, :nonce, :crypto_suite, :identity
+    attr_reader :tx_id, :nonce, :identity
 
-    def initialize(crypto_suite, identity)
+    def initialize(identity)
       @identity = identity
-      @nonce = crypto_suite.generate_nonce
-      @tx_id = crypto_suite.hexdigest(nonce + identity.serialize)
-      @crypto_suite = crypto_suite
+      @nonce = identity.crypto_suite.generate_nonce
+      @tx_id = identity.crypto_suite.hexdigest(nonce + identity.serialize)
     end
 
     def nonce_hex
-      crypto_suite.encode_hex nonce
+      identity.crypto_suite.encode_hex nonce
     end
 
     def signature_header

@@ -11,30 +11,34 @@ module Fabric
       @crypto_suite = options[:crypto_suite]
     end
 
-    def register_peer(config)
+    def register_peer(options, extra_options = {})
       @peers ||= []
 
-      config = config.is_a?(String) ? { url: config } : config
+      options = { host: options } if options.is_a?(String)
+      extra_options.merge!(options)
+      extra_options.merge!(logger: logger)
 
-      @peers << Peer.new(config.merge(logger: logger))
+      @peers << Peer.new(extra_options[:host], extra_options[:creds], extra_options)
     end
 
-    def register_orderer(config)
+    def register_orderer(options, extra_options = {})
       @orderers ||= []
 
-      config = config.is_a?(String) ? { url: config } : config
+      options = { host: options } if options.is_a?(String)
+      extra_options.merge!(options)
+      extra_options.merge!(logger: logger)
 
-      @orderers << Orderer.new(config.merge(logger: logger))
+      @orderers << Orderer.new(extra_options[:host], extra_options[:creds], extra_options)
     end
 
-    def register_event_hub(config)
+    def register_event_hub(options, extra_options = {})
       @event_hubs ||= []
 
-      config = config.is_a?(String) ? { url: config } : config
+      options = { host: options } if options.is_a?(String)
+      extra_options.merge!(options)
+      extra_options.merge!(logger: logger)
 
-      config.merge!(logger: logger, crypto_suite: crypto_suite, identity: identity)
-
-      @event_hubs << EventHub.new(config)
+      @event_hubs << EventHub.new(extra_options[:host], extra_options[:creds], extra_options)
     end
 
     def query(request = {})

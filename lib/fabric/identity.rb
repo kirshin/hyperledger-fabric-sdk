@@ -4,7 +4,8 @@ module Fabric
   class Identity
     attr_reader :private_key,
                 :public_key,
-                :address
+                :address,
+                :crypto_suite
 
     attr_accessor :certificate, :mspid
 

@@ -22,7 +22,7 @@ event_hub = fabric_client.event_hubs.first
 start_block = 1
 stop_block = Fabric::EventHub::MAX_BLOCK_NUMBER
 
-event_hub.observe('mychannel', start_block, stop_block) do |block|
+event_hub.observe('mychannel', user_identity, start_block, stop_block) do |block|
   tx_validation_codes = block[:metadata][:metadata][2]
 
   block[:data][:data].each_with_index do |data, index|
