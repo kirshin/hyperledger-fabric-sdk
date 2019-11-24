@@ -15,9 +15,6 @@ enrollment_response = fabric_ca_client.enroll(user_identity.generate_csr([%w(CN 
 user_identity.certificate = enrollment_response[:result][:Cert]
 
 ## Query
-byebug
-sdk = Fabric.new(peers: %w(demo demo2))
-byebug
-fabric_client = sdk.client(identity: user_identity)
-byebug
+fabric_client = Fabric.client(identity: user_identity)
+
 puts fabric_client.query(chaincode_id: "mycc",  channel_id: 'mychannel',  args: %w(query a))
