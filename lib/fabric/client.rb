@@ -58,6 +58,8 @@ module Fabric
       send_transaction(transaction) { |response| parse_orderer_response response }
 
       responses.map { |response| parse_chaincode_response response.response }
+
+      transaction
     end
 
     private
