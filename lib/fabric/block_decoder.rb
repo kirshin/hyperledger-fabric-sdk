@@ -122,7 +122,7 @@ module Fabric
     def self.decode_payload_header_extension(extension_data)
       return unless extension_data
 
-      Protos::ChaincodeHeaderExtension.decode(extension_data).to_hash
+      Protos::ChaincodeHeaderExtension.decode(extension_data)
     end
 
     def self.decode_signature_header(signature_header_data)
@@ -186,13 +186,13 @@ module Fabric
     end
 
     def self.decode_chaincode_proposal_payload_input(input_data)
-      Protos::ChaincodeInvocationSpec.decode(input_data).to_hash
+      Protos::ChaincodeInvocationSpec.decode(input_data)
     end
 
     def self.decode_chaincode_input(input_data)
       proto_chaincode_input = Protos::ChaincodeInput.decode input_data
 
-      proto_chaincode_input.to_hash
+      proto_chaincode_input
     end
 
     def self.decode_chaincode_endorsed_action(proto_action)
@@ -263,7 +263,7 @@ module Fabric
     end
 
     def self.decode_kv_rw_set(rwset_data)
-      Kvrwset::KVRWSet.decode(rwset_data).to_hash
+      Kvrwset::KVRWSet.decode(rwset_data)
     end
 
     def self.decode_collection_hashed_rw_set(proto_collection_hashed_rwset)
@@ -277,23 +277,23 @@ module Fabric
     end
 
     def self.decode_hashed_rwset(hashed_rwset_data)
-      Rwset::HashedRWSet.decode(hashed_rwset_data).to_hash
+      Rwset::HashedRWSet.decode(hashed_rwset_data)
     end
 
     def self.decode_chaincode_events(event_data)
-      Protos::ChaincodeEvent.decode(event_data).to_hash
+      Protos::ChaincodeEvent.decode(event_data)
     end
 
     def self.decode_response(proposal_response)
       return unless proposal_response
 
-      proposal_response.to_hash
+      proposal_response
     end
 
     def self.decode_chaincode_id(chaincode_id)
       return unless chaincode_id
 
-      chaincode_id.to_hash
+      chaincode_id
     end
   end
 end

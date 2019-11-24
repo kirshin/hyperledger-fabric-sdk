@@ -44,8 +44,9 @@ module Fabric
   def self.client(opts = {})
     client = Fabric::Client.new opts
 
-    @orderers.each { |url| client.register_orderer url, opts }
-    @peers.each { |url| client.register_peer url, opts }
+    orderers.each { |config| client.register_orderer config }
+    peers.each { |config| client.register_peer config }
+    event_hubs.each { |config| client.register_event_hub config }
 
     client
   end

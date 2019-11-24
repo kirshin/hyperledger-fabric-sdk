@@ -1,7 +1,7 @@
 module Fabric
   class Client
     attr_reader :identity, :crypto_suite,
-                :orderers, :peers, :logger
+                :orderers, :peers, :event_hubs, :logger
 
     def initialize(opts = {})
       options = Fabric.options.merge opts
@@ -11,16 +11,30 @@ module Fabric
       @crypto_suite = options[:crypto_suite]
     end
 
-    def register_peer(url, opts = {})
+    def register_peer(config)
       @peers ||= []
 
-      @peers << Peer.new(url: url, opts: opts, logger: logger)
+      config = config.is_a?(String) ? { url: config } : config
+
+      @peers << Peer.new(config.merge(logger: logger))
     end
 
-    def register_orderer(url, opts = {})
+    def register_orderer(config)
       @orderers ||= []
 
-      @orderers << Orderer.new(url: url, opts: opts, logger: logger)
+      config = config.is_a?(String) ? { url: config } : config
+
+      @orderers << Orderer.new(config.merge(logger: logger))
+    end
+
+    def register_event_hub(config)
+      @event_hubs ||= []
+
+      config = config.is_a?(String) ? { url: config } : config
+
+      config.merge!(logger: logger, crypto_suite: crypto_suite, identity: identity)
+
+      @event_hubs << EventHub.new(config)
     end
 
     def query(request = {})

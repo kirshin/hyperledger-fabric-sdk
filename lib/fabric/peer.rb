@@ -4,12 +4,15 @@ module Fabric
   class Peer
     attr_reader :url, :channel, :logger
 
-    def initialize(opts)
-      @url = opts[:url]
-      @logger = opts[:logger]
-      channel_creds = opts[:channel_creds] || :this_channel_is_insecure
+    def initialize(config)
+      @url = config[:url]
+      @logger = config[:logger]
 
-      @channel = Protos::Endorser::Stub.new url, channel_creds
+      creds = GRPC::Core::ChannelCredentials.new(config[:tls_ca_cert]) if config[:tls_ca_cert]
+      creds ||= :this_channel_is_insecure
+      args = config[:grpc_options] || {}
+
+      @channel = Protos::Endorser::Stub.new url, creds, channel_args: args
     end
 
     def send_process_proposal(proposal)
