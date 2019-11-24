@@ -1,13 +1,16 @@
 module Fabric
   class Proposal
-    attr_reader :crypto_suite, :identity, :request
+    attr_reader :identity, :request
 
-    def initialize(crypto_suite, identity, request = {})
-      @crypto_suite = crypto_suite
+    def initialize(identity, request = {})
       @identity = identity
       @request = request
 
       assign_tx request[:transaction_info] if request[:transaction_info]
+    end
+
+    def crypto_suite
+      identity.crypto_suite
     end
 
     def nonce

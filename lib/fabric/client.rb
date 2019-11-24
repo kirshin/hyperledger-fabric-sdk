@@ -1,14 +1,12 @@
 module Fabric
   class Client
-    attr_reader :identity, :crypto_suite,
-                :orderers, :peers, :event_hubs, :logger
+    attr_reader :identity, :orderers, :peers, :event_hubs, :logger
 
     def initialize(opts = {})
       options = Fabric.options.merge opts
 
       @logger = Logger.new options[:logger], options[:logger_filters]
       @identity = options[:identity]
-      @crypto_suite = options[:crypto_suite]
     end
 
     def register_peer(options, extra_options = {})
@@ -44,7 +42,7 @@ module Fabric
     def query(request = {})
       logging __method__, request
 
-      proposal = Proposal.new crypto_suite, identity, request
+      proposal = Proposal.new identity, request
 
       send_query(proposal) { |response| parse_chaincode_response response.response }
     end
@@ -52,12 +50,11 @@ module Fabric
     def invoke(request = {})
       logging __method__, request
 
-      proposal = Proposal.new crypto_suite, identity, request
+      proposal = Proposal.new identity, request
 
       responses = send_query(proposal) { |response| parse_peer_response response }
 
-      transaction = Transaction.new crypto_suite, identity, proposal: proposal,
-                                                            responses: responses
+      transaction = Transaction.new identity, proposal: proposal, responses: responses
 
       send_transaction(transaction) { |response| parse_orderer_response response }
 

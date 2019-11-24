@@ -7,10 +7,8 @@ fabric_ca_client = FabricCA.client(
   password: "adminpw"
 )
 
-crypto_suite = Fabric.crypto_suite
-
 user = Fabric::Identity.new(
-  crypto_suite,
+  Fabric.crypto_suite,
   {
     username: "admin",
     affiliation: "org1.department1",

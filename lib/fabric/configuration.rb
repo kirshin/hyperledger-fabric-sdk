@@ -3,7 +3,6 @@ module Fabric
     DEFAULT_TIMEOUT = 30
 
     VALID_OPTIONS_KEYS = %i[
-      crypto_suite
       orderers
       peers
       event_hubs

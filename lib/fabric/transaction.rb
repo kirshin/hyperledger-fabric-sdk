@@ -2,10 +2,9 @@ require 'peer/transaction_pb'
 
 module Fabric
   class Transaction
-    attr_reader :crypto_suite, :identity, :request
+    attr_reader :identity, :request
 
-    def initialize(crypto_suite, identity, request = {})
-      @crypto_suite = crypto_suite
+    def initialize(identity, request = {})
       @identity = identity
       @request = request
     end

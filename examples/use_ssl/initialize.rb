@@ -13,7 +13,7 @@ end
 
 Fabric.configure do |config|
   config.logger = logger
-  config.crypto_suite = Fabric.crypto_suite
+
   config.peers = [
     {
       host: "localhost:7051",

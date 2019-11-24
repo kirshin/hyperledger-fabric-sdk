@@ -12,10 +12,8 @@ fabric_sdk = Fabric.new(
   peers: ["localhost:7051", "localhost:8051"]
 )
 
-crypto_suite = Fabric.crypto_suite
-
 user_identity = Fabric::Identity.new(
-  crypto_suite,
+  Fabric.crypto_suite,
   {
     username: "admin",
     affiliation: "org1.department1",
@@ -27,10 +25,7 @@ enrollment_response = fabric_ca_client.enroll(user_identity.generate_csr([%w(CN 
 
 user_identity.certificate = enrollment_response[:result][:Cert]
 
-fabric_client = fabric_sdk.client(
-  identity: user_identity,
-  crypto_suite: crypto_suite
-)
+fabric_client = fabric_sdk.client(identity: user_identity)
 
 puts fabric_client.query(
   chaincode_id: "fabcar",
