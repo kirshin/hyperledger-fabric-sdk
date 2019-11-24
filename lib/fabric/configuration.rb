@@ -32,6 +32,9 @@ module Fabric
     def reset
       VALID_OPTIONS_KEYS.each { |key| send("#{key}=", nil) }
 
+      self.orderers = []
+      self.peers = []
+      self.event_hubs = []
       self.timeout = DEFAULT_TIMEOUT
     end
 
