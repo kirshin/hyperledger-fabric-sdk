@@ -3,9 +3,6 @@ require 'faraday'
 module FabricCA
   module FaradayMiddleware
     class RaiseHttpException < Faraday::Middleware
-      ## Variables
-      LOGGER_TAG = 'FABRIC CA'.freeze
-
       ## Attributes
       attr_reader :app, :logger
 
@@ -40,7 +37,7 @@ module FabricCA
       def logging(message)
         return unless logger
 
-        logger.tagged(LOGGER_TAG) { |logger| logger.error message }
+        logger.error message
       end
     end
   end

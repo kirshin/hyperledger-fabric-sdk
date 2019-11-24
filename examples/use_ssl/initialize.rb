@@ -1,14 +1,18 @@
+require 'logger'
 require 'hyperledger-fabric-sdk'
 
+logger = Logger.new(STDOUT)
+logger.level = Logger::INFO
+
 FabricCA.configure do |config|
+  config.logger = logger
   config.endpoint = 'https://localhost:7054'
   config.ca_name = 'ca-org1'
   config.connection_opts = { ssl: { verify: false } }
 end
 
-
-
 Fabric.configure do |config|
+  config.logger = logger
   config.crypto_suite = Fabric.crypto_suite
   config.peers = [
     {
