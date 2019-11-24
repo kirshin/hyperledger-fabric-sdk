@@ -48,15 +48,6 @@ module Fabric
     client
   end
 
-  def self.event_hub(opts = {})
-    options = Fabric.options.merge opts
-
-    options[:crypto_suite] ||= Fabric.crypto_suite
-    options[:url] = options[:event_hub_url]
-
-    Fabric::EventHub.new options
-  end
-
   def self.crypto_suite(opts = {})
     @crypto_suite ||= Fabric::CryptoSuite.new opts
   end
