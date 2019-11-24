@@ -1,4 +1,5 @@
-require 'hyperledger-fabric-sdk'
+require 'byebug'
+require_relative '../../lib/hyperledger-fabric-sdk.rb'
 
 FabricCA.configure do |config|
   config.endpoint = 'https://localhost:7054'

@@ -34,5 +34,9 @@ module Fabric
 
       self.timeout = DEFAULT_TIMEOUT
     end
+
+    def assign(config)
+      VALID_OPTIONS_KEYS.each { |key| send("#{key}=", config[key]) if config.key?(key) }
+    end
   end
 end

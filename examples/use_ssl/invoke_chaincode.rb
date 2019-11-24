@@ -2,7 +2,7 @@
 require_relative './initialize.rb'
 
 ## Enroll admin
-fabric_ca_client = FabricCA.new(username: 'admin',  password: 'adminpw')
+fabric_ca_client = FabricCA.client(username: 'admin',  password: 'adminpw')
 user_identity = Fabric::Identity.new(
   Fabric.crypto_suite,
   {

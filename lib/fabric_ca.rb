@@ -11,6 +11,12 @@ module FabricCA
   extend Configuration
 
   def self.new(options = {})
+    assign(options)
+
+    self
+  end
+
+  def self.client(options)
     FabricCA::Client.new(options)
   end
 end

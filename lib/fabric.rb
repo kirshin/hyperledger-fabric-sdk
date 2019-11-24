@@ -24,7 +24,6 @@ require_relative 'fabric/transaction'
 require_relative 'fabric/error'
 require_relative 'fabric/logger'
 require_relative 'fabric/chaincode_response'
-require_relative 'fabric/channel'
 require_relative 'fabric/transaction_info'
 require_relative 'fabric/helper'
 require_relative 'fabric/block_decoder'
@@ -32,12 +31,9 @@ require_relative 'fabric/event_hub'
 
 module Fabric
   extend Configuration
-  @orderers = []
-  @peers = []
 
   def self.new(config)
-    @orderers = config[:orderers]
-    @peers = config[:peers]
+    assign(config)
 
     self
   end

@@ -10,6 +10,6 @@ user = Fabric::Identity.new(
   }
 ).generate_csr([%w(CN admin)])
 
-fabric_ca_client = FabricCA.new(username: "admin",  password: "adminpw")
+fabric_ca_client = FabricCA.client(username: "admin",  password: "adminpw")
 
 puts fabric_ca_client.enroll(user)
