@@ -23,5 +23,9 @@ module FabricCA
     def reset
       VALID_OPTIONS_KEYS.each { |key| send("#{key}=", nil) }
     end
+
+    def assign(config)
+      VALID_OPTIONS_KEYS.each { |key| send("#{key}=", config[key]) if config.key?(key) }
+    end
   end
 end

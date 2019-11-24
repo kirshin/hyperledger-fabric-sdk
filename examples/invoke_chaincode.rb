@@ -1,7 +1,7 @@
 #!/Users/djlazz3/.rbenv/shims/ruby
 require 'hyperledger-fabric-sdk'
 
-fabric_ca_client = FabricCA.new(
+fabric_ca_client = FabricCA.client(
   endpoint: "http://localhost:7054",
   username: "admin",
   password: "adminpw"

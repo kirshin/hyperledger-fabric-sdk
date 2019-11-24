@@ -1,41 +1,28 @@
-require 'hyperledger-fabric-sdk'
+#!/Users/djlazz3/.rbenv/shims/ruby
+require_relative './initialize.rb'
 
-fabric_ca_client = FabricCA.client(
-  endpoint: "http://localhost:7054",
-  username: "admin",
-  password: "adminpw"
-)
-
-crypto_suite = Fabric.crypto_suite
-
+## Enroll admin
+fabric_ca_client = FabricCA.client(username: 'admin',  password: 'adminpw')
 user_identity = Fabric::Identity.new(
-  crypto_suite,
+  Fabric.crypto_suite,
   {
     username: "admin",
     affiliation: "org1.department1",
     mspid: 'Org1MSP'
   }
 )
-
-fabric_sdk = Fabric.new(
-  orderers: ["localhost:7050"],
-  peers: ["localhost:7051", "localhost:8051"],
-  event_hubs: ["localhost:7051"]
-)
-
 enrollment_response = fabric_ca_client.enroll(user_identity.generate_csr([%w(CN admin)]))
-
 user_identity.certificate = enrollment_response[:result][:Cert]
 
-fabric_client = fabric_sdk.client(
-  identity: user_identity,
-  crypto_suite: crypto_suite
-)
+## EventHub
+fabric_client = Fabric.client(identity: user_identity)
 
-start_block = 0
+event_hub = fabric_client.event_hubs.first
+
+start_block = 1
 stop_block = Fabric::EventHub::MAX_BLOCK_NUMBER
 
-fabric_client.event_hubs.first.observe('mychannel', start_block, stop_block) do |block|
+event_hub.observe('mychannel', start_block, stop_block) do |block|
   tx_validation_codes = block[:metadata][:metadata][2]
 
   block[:data][:data].each_with_index do |data, index|

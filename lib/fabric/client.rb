@@ -1,10 +1,7 @@
 module Fabric
   class Client
     attr_reader :identity, :crypto_suite,
-                :orderers, :peers, :logger
-
-    MAX_ATTEMPTS_CHECK_TRANSACTION = 20
-    DELAY_PERIOD_CHECK_TRANSACTION = 2
+                :orderers, :peers, :event_hubs, :logger
 
     def initialize(opts = {})
       options = Fabric.options.merge opts
@@ -14,16 +11,30 @@ module Fabric
       @crypto_suite = options[:crypto_suite]
     end
 
-    def register_peer(url, opts = {})
+    def register_peer(config)
       @peers ||= []
 
-      @peers << Peer.new(url: url, opts: opts, logger: logger)
+      config = config.is_a?(String) ? { url: config } : config
+
+      @peers << Peer.new(config.merge(logger: logger))
     end
 
-    def register_orderer(url, opts = {})
+    def register_orderer(config)
       @orderers ||= []
 
-      @orderers << Orderer.new(url: url, opts: opts, logger: logger)
+      config = config.is_a?(String) ? { url: config } : config
+
+      @orderers << Orderer.new(config.merge(logger: logger))
+    end
+
+    def register_event_hub(config)
+      @event_hubs ||= []
+
+      config = config.is_a?(String) ? { url: config } : config
+
+      config.merge!(logger: logger, crypto_suite: crypto_suite, identity: identity)
+
+      @event_hubs << EventHub.new(config)
     end
 
     def query(request = {})
@@ -67,36 +78,6 @@ module Fabric
                                       payload: payload.to_proto
 
       orderers.each { |orderer| orderer.send_broadcast envelope, &block }
-
-      check_transaction transaction
-    end
-
-    def check_transaction(transaction)
-      MAX_ATTEMPTS_CHECK_TRANSACTION.times do
-        begin
-          validation_code = get_transaction_validation_code transaction
-
-          logging __method__, tx_id: transaction.tx_id, status: validation_code
-
-          return validation_code if validation_code == :VALID
-
-          raise Fabric::TransactionError, validation_code
-        rescue UnknownError => ex
-          sleep DELAY_PERIOD_CHECK_TRANSACTION
-
-          logger.debug ex.message
-        end
-      end
-    end
-
-    def get_transaction_validation_code(transaction)
-      channel_id = transaction.proposal.channel_id
-      responses = query channel_id: channel_id,
-                        chaincode_id: 'qscc',
-                        args: ['GetTransactionByID', channel_id, transaction.tx_id]
-      processed_transaction = Protos::ProcessedTransaction.decode responses.first
-
-      Protos::TxValidationCode.lookup processed_transaction.validationCode
     end
 
     def parse_chaincode_response(response)

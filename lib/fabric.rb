@@ -24,7 +24,6 @@ require_relative 'fabric/transaction'
 require_relative 'fabric/error'
 require_relative 'fabric/logger'
 require_relative 'fabric/chaincode_response'
-require_relative 'fabric/channel'
 require_relative 'fabric/transaction_info'
 require_relative 'fabric/helper'
 require_relative 'fabric/block_decoder'
@@ -32,40 +31,21 @@ require_relative 'fabric/event_hub'
 
 module Fabric
   extend Configuration
-  @orderers = []
-  @peers = []
 
   def self.new(config)
-    @orderers = config[:orderers]
-    @peers = config[:peers]
+    assign(config)
+
     self
   end
 
   def self.client(opts = {})
     client = Fabric::Client.new opts
 
-    @orderers.each { |url| client.register_orderer url, opts }
-    @peers.each { |url| client.register_peer url, opts }
+    orderers.each { |config| client.register_orderer config }
+    peers.each { |config| client.register_peer config }
+    event_hubs.each { |config| client.register_event_hub config }
 
     client
-  end
-
-  def self.channel(opts = {})
-    channel = Fabric::Channel.new opts
-
-    @orderers.each { |url| channel.register_orderer url, opts }
-    @peers.each { |url| channel.register_peer url, opts }
-
-    channel
-  end
-
-  def self.event_hub(opts = {})
-    options = Fabric.options.merge opts
-
-    options[:crypto_suite] ||= Fabric.crypto_suite
-    options[:url] = options[:event_hub_url]
-
-    Fabric::EventHub.new options
   end
 
   def self.crypto_suite(opts = {})
