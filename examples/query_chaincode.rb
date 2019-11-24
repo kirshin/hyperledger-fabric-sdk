@@ -1,7 +1,7 @@
 #!/Users/djlazz3/.rbenv/shims/ruby
 require 'hyperledger-fabric-sdk'
 
-fabric_ca_client = FabricCA.new(
+fabric_ca_client = FabricCA.client(
   endpoint: "http://localhost:7054",
   username: "admin",
   password: "adminpw"
@@ -32,7 +32,7 @@ fabric_client = fabric_sdk.client(
   crypto_suite: crypto_suite
 )
 
-fabric_client.query(
+puts fabric_client.query(
   chaincode_id: "fabcar",
   channel_id: 'mychannel',
   args: ["initLedger"]
