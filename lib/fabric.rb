@@ -2,8 +2,6 @@ lib_dir = File.join(__dir__, 'fabric/protos')
 
 $LOAD_PATH.push(lib_dir) unless $LOAD_PATH.include?(lib_dir)
 
-require 'colorize'
-
 require 'common/common_pb'
 require 'common/configtx_pb'
 require 'peer/events_services_pb'

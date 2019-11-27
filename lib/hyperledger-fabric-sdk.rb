@@ -1,10 +1,2 @@
-# require 'rubygems'
-# require 'rainbow'
-# require 'faraday_middleware'
-# require 'faraday'
-# require 'grpc'
-# require 'digest-sha3'
-# require 'logger'
-
 require_relative 'fabric'
 require_relative 'fabric_ca'

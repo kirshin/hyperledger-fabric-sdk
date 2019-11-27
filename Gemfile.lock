@@ -1,12 +1,12 @@
 PATH
   remote: .
   specs:
-    hyperledger-fabric-sdk (0.1.3)
+    hyperledger-fabric-sdk (0.1.4)
       digest-sha3 (~> 1.1)
       faraday (~> 0.17)
       faraday_middleware (~> 0.13)
+      google-protobuf (~> 3.10)
       grpc (~> 1.25)
-      rainbow (~> 3.0)
 
 GEM
   remote: https://rubygems.org/
@@ -16,14 +16,13 @@ GEM
       multipart-post (>= 1.2, < 3)
     faraday_middleware (0.13.1)
       faraday (>= 0.7.4, < 1.0)
-    google-protobuf (3.10.1-universal-darwin)
+    google-protobuf (3.11.0)
     googleapis-common-protos-types (1.0.4)
       google-protobuf (~> 3.0)
-    grpc (1.25.0-universal-darwin)
+    grpc (1.25.0)
       google-protobuf (~> 3.8)
       googleapis-common-protos-types (~> 1.0)
     multipart-post (2.1.1)
-    rainbow (3.0.0)
     rake (10.5.0)
 
 PLATFORMS

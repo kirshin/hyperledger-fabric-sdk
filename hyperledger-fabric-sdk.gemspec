@@ -5,8 +5,6 @@ Gem::Specification.new do |s|
   s.summary       = "This SDK enables Ruby developers to interact with hyperledger-fabric"
   s.description   = ""
   s.authors       = ["Alexandr Kirshin(kirshin)", "(qiusugang)", "Bryan Padron(djlazz3)"]
-  # s.add_dependency 'rainbow', '~>3.0'
-  s.add_dependency 'colorize', '~>0.8'
   s.add_dependency 'faraday_middleware', '~>0.13'
   s.add_dependency 'faraday', '~>0.17'
   s.add_dependency 'grpc', '~>1.25'
