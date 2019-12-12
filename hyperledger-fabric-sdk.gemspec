@@ -10,6 +10,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'grpc', '~>1.25'
   s.add_dependency 'google-protobuf', '~>3.10'
   s.add_dependency 'digest-sha3', '~>1.1'
+  s.add_dependency 'hashie', '~>4.0'
   s.add_development_dependency "bundler", "~> 2.0"
   s.add_development_dependency "rake", "~> 10.0"
   s.files         = ["lib/hyperledger-fabric-sdk.rb"]
@@ -54,14 +55,5 @@ Gem::Specification.new do |s|
     "lib/fabric_ca",
     "lib/fabric_ca/faraday_middleware"
   ]
-<<<<<<< HEAD
-  s.add_dependency 'colorize', '~>0.8'
-  s.add_dependency 'faraday_middleware', '~>0.13'
-  s.add_dependency 'faraday', '~>0.17'
-  s.add_dependency 'grpc', '~>1.25'
-  s.add_dependency 'digest-sha3', '~>1.1'
   s.homepage = 'https://github.com/kirshin/hyperledger-fabric-sdk'
-=======
-  s.homepage      = 'https://github.com/kirshin/hyperledger-fabric-sdk'
->>>>>>> adds MIT License, Gemfile, and Rakefile, makes changes to gem to avoid collisions with rails
 end

@@ -68,8 +68,8 @@ module Fabric
     end
 
     def logging(section, message = {})
-      logger.info section.to_s.upcase.colorize(:yellow),
-                  message.to_s.colorize(:blue)
+      logger.info section.to_s.upcase,
+                  message.to_s
     end
   end
 end
