@@ -17,9 +17,9 @@ module Fabric
     private
 
     def logging(section, message)
-      logger.debug section.to_s.upcase.colorize(:yellow),
-                   host.colorize(:red),
-                   message.to_s.colorize(:blue)
+      logger.debug section.to_s.upcase,
+                   host,
+                   message.to_s
     end
   end
 end

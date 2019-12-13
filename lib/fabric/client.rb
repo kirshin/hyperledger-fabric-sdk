@@ -5,7 +5,7 @@ module Fabric
     def initialize(opts = {})
       options = Fabric.options.merge opts
 
-      @logger = Logger.new options[:logger], options[:logger_filters]
+      @logger = FabricLogger.new options[:logger], options[:logger_filters]
       @identity = options[:identity]
     end
 
@@ -104,8 +104,8 @@ module Fabric
     end
 
     def logging(section, message = {})
-      logger.info section.to_s.upcase.colorize(:yellow),
-                  message.to_s.colorize(:blue)
+      logger.info section.to_s.upcase,
+                  message.to_s
     end
   end
 end
